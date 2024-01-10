@@ -5,7 +5,7 @@ FROM openjdk:17
 WORKDIR /app
 
 # Copia el archivo JAR de tu aplicación al contenedor
-COPY target/HotelSanCristobal-0.0.1-SNAPSHOT.jar /app/HotelSanCristobal-0.0.1-SNAPSHOT.jar
+COPY HotelSanCristobal-0.0.1-SNAPSHOT.jar /app/HotelSanCristobal-0.0.1-SNAPSHOT.jar
 
 # Expone el puerto en el que tu aplicación se ejecuta
 EXPOSE 8080
