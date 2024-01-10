@@ -2,7 +2,7 @@
 FROM openjdk:17
 
 # Copia el archivo JAR de tu aplicación al contenedor
-COPY /home/admin/WebHotelSanCristobal/target/HotelSanCristobal-0.0.1-SNAPSHOT.jar /app/HotelSanCristobal-0.0.1-SNAPSHOT.jar
+COPY /home/admin/HotelSanCristobal-0.0.1-SNAPSHOT.jar /app/HotelSanCristobal-0.0.1-SNAPSHOT.jar
 
 # Establece el directorio de trabajo
 WORKDIR /app
@@ -11,4 +11,4 @@ WORKDIR /app
 EXPOSE 8080
 
 # Comando para ejecutar la aplicación cuando se inicia el contenedor
-CMD ["java", "-jar", "tu-aplicacion.jar"]
+CMD ["java", "-jar", "HotelSanCristobal-0.0.1-SNAPSHOT.jar"]
