@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  web:
+    container_name: web-hotel-san-cristobal
+    image: openjdk:17
+    ports:
+      - "8080:8080"
+    volumes:
+      - /home/admin/HotelSanCristobal-0.0.1-SNAPSHOT.jar:/app/HotelSanCristobal-0.0.1-SNAPSHOT.jar
+    working_dir: /app
+    command: ["java", "-jar", "HotelSanCristobal-0.0.1-SNAPSHOT.jar"]
