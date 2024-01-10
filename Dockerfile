@@ -1,11 +1,14 @@
-# Usa la imagen oficial de Tomcat como base
-FROM tomcat:latest
+# Usa la imagen oficial de OpenJDK como base
+FROM openjdk:17
 
-# Copia el archivo JAR de tu aplicación al directorio de despliegue de Tomcat
-COPY target/HotelSanCristobal-0.0.1-SNAPSHOT.jar /usr/local/tomcat/webapps/
+# Copia el archivo JAR de tu aplicación al contenedor
+COPY target/HotelSanCristobal-0.0.1-SNAPSHOT.jar /app/HotelSanCristobal-0.0.1-SNAPSHOT.jar
 
-# Exponer el puerto en el que Tomcat escucha
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Expone el puerto en el que tu aplicación se ejecuta
 EXPOSE 8080
 
-# Comando para iniciar Tomcat cuando se ejecuta el contenedor
-CMD ["catalina.sh", "run"]
+# Comando para ejecutar la aplicación cuando se inicia el contenedor
+CMD ["java", "-jar", "tu-aplicacion.jar"]
