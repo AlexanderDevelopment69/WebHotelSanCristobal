@@ -1,0 +1,60 @@
+<!-- /header.html -->
+<th:block xmlns:th="http://www.thymeleaf.org">
+    <!--================Header Area =================-->
+    <header class="header_area">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <!-- Enlace con el logotipo -->
+                <a class="navbar-brand logo_h" th:href="@{/index}">
+                    <!--                <img th:src="@{/image/Logo.png}" alt="">-->
+                    San Cristobal
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+                        <li class="nav-item active"><a class="nav-link" th:href="@{/index}">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/habitaciones}">Habitaciones</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/nosotros}">Acerca de nosotros</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/contacto}">contacto</a></li>
+
+                        <!--     Mostrar la opción "Perfil" solo si el cliente está autenticado -->
+                        <li class="nav-item submenu dropdown active"
+                            th:if="${#authorization.expression('isAuthenticated()')}">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">Perfil</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" th:href="@{/clientes/perfil}">Ver mi perfil</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" th:href="@{/clientes/reservas}">Ver mis
+                                    reservas</a></li>
+                                <li class="nav-item"><a class="nav-link" th:href="@{/clientes/pagos}">Ver mis pagos</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Cerrar sesión</a></li>
+
+                                <!--                                <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>-->
+                                <!--                                <li class="nav-item"><a class="nav-link" href="blog-single.html">Blog Details</a></li>-->
+                            </ul>
+                        </li>
+
+                        <!-- Mostrar la opción "Iniciar sesión" si el cliente no está autenticado -->
+                        <li class="nav-item submenu dropdown "
+                            th:unless="${#authorization.expression('isAuthenticated()')}">
+                            <a class="nav-link" th:href="@{/clientes/login}">Iniciar sesión</a>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+    </header>
+    <!--================Header Area =================-->
+</th:block>

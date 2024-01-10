@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" th:href="@{/image/favicon.png}" type="image/png"/>
+    <title>Habitaciones</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/vendors/linericon/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/vendors/owl-carousel/owl.carousel.min.css}"/>
+    <link rel="stylesheet" th:href="@{/vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css}"/>
+    <link rel="stylesheet" th:href="@{/vendors/nice-select/css/nice-select.css}"/>
+    <link rel="stylesheet" th:href="@{/vendors/owl-carousel/owl.carousel.min.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/styleChatBot.css}"/>
+    <!-- Google Fonts Link For Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+
+    <!-- main css -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/responsive.css}"/>
+</head>
+<body>
+<!-- Incluir encabezado-->
+<div th:replace="~{header :: header}"></div>
+
+
+<!--================Breadcrumb Area =================-->
+<section class="breadcrumb_area">
+    <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+    <div class="container">
+        <div class="page-cover text-center">
+            <h2 class="page-cover-tittle">Alojamiento</h2>
+            <ol class="breadcrumb">
+                <li><a href="index.html">Inicio</a></li>
+                <li class="active">Alojamiento</li>
+            </ol>
+        </div>
+    </div>
+</section>
+<!--================Breadcrumb Area =================-->
+
+<!--&lt;!&ndash;================ Área de Alojamiento =================&ndash;&gt;-->
+<!--<section class="accomodation_area section_gap">-->
+<!--    <div class="container">-->
+<!--        <div class="section_title text-center">-->
+<!--            <h2 class="title_color">Alojamiento Especial</h2>-->
+<!--            <p>Todos vivimos en una era que pertenece a los jóvenes de corazón. Una vida que se vuelve extremadamente rápida,</p>-->
+<!--        </div>-->
+<!--        <div class="row mb_30">-->
+<!--            <div class="col-lg-3 col-sm-6">-->
+<!--                <div class="accomodation_item text-center">-->
+<!--                    <div class="hotel_img">-->
+<!--                        <img src="image/room1.jpg" alt="">-->
+<!--                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>-->
+<!--                    </div>-->
+<!--                    <a href="#"><h4 class="sec_h4">Habitación Doble Deluxe</h4></a>-->
+<!--                    <h5>$250<small>/noche</small></h5>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-lg-3 col-sm-6">-->
+<!--                <div class="accomodation_item text-center">-->
+<!--                    <div class="hotel_img">-->
+<!--                        <img src="image/room2.jpg" alt="">-->
+<!--                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>-->
+<!--                    </div>-->
+<!--                    <a href="#"><h4 class="sec_h4">Habitación Individual Deluxe</h4></a>-->
+<!--                    <h5>$200<small>/noche</small></h5>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-lg-3 col-sm-6">-->
+<!--                <div class="accomodation_item text-center">-->
+<!--                    <div class="hotel_img">-->
+<!--                        <img src="image/room3.jpg" alt="">-->
+<!--                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>-->
+<!--                    </div>-->
+<!--                    <a href="#"><h4 class="sec_h4">Suite de Luna de Miel</h4></a>-->
+<!--                    <h5>$750<small>/noche</small></h5>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-lg-3 col-sm-6">-->
+<!--                <div class="accomodation_item text-center">-->
+<!--                    <div class="hotel_img">-->
+<!--                        <img src="image/room4.jpg" alt="">-->
+<!--                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>-->
+<!--                    </div>-->
+<!--                    <a href="#"><h4 class="sec_h4">Doble Económica</h4></a>-->
+<!--                    <h5>$200<small>/noche</small></h5>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+<!--&lt;!&ndash;================ Área de Alojamiento =================&ndash;&gt;-->
+
+
+
+<!--================Área de Tabla de Reservas=================-->
+<section class="hotel_booking_area">
+    <div class="container">
+        <div class="row hotel_booking_table">
+            <div class="col-md-3">
+                <h2>Reserva<br> Tu Habitación</h2>
+            </div>
+            <div class="col-md-9">
+                <div class="boking_table">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="book_tabel_item">
+                                <div class="form-group">
+                                    <div class='input-group date' id='datetimepicker11'>
+                                        <input type='text' class="form-control" placeholder="Fecha de llegada"/>
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class='input-group date' id='datetimepicker1'>
+                                        <input type='text' class="form-control" placeholder="Fecha de salida"/>
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="book_tabel_item">
+                                <div class="input-group">
+                                    <select class="wide">
+                                        <option data-display="Adulto">Adulto</option>
+                                        <option value="1">Anciano</option>
+                                        <option value="2">Joven</option>
+                                        <option value="3">Patata</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <select class="wide">
+                                        <option data-display="Niño">Niño</option>
+                                        <option value="1">Niño</option>
+                                        <option value="2">Bebé</option>
+                                        <option value="3">Niño</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="book_tabel_item">
+                                <div class="input-group">
+                                    <select class="wide">
+                                        <option data-display="Número de Habitaciones">Número de Habitaciones</option>
+                                        <option value="1">Habitación 01</option>
+                                        <option value="2">Habitación 02</option>
+                                        <option value="3">Habitación 03</option>
+                                    </select>
+                                </div>
+                                <a class="book_now_btn button_hover" href="#">Reservar ahora</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================Área de Tabla de Reservas=================-->
+<!--================ Área de Alojamiento =================-->
+<section class="accomodation_area section_gap">
+    <div class="container">
+        <div class="section_title text-center">
+            <h2 class="title_color">Alojamiento Normal</h2>
+            <p>Todos vivimos en una era que pertenece a los jóvenes de corazón. La vida se está volviendo extremadamente rápida,</p>
+        </div>
+        <div class="row accomodation_two">
+            <div class="col-lg-3 col-sm-6">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="image/room1.jpg" alt="">
+                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>
+                    </div>
+                    <a href="#"><h4 class="sec_h4">Habitación Doble Deluxe</h4></a>
+                    <h5>S/. 650<small>/noche</small></h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="image/room2.jpg" alt="">
+                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>
+                    </div>
+                    <a href="#"><h4 class="sec_h4">Habitación Individual Deluxe</h4></a>
+                    <h5>S/. 520<small>/noche</small></h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="image/room3.jpg" alt="">
+                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>
+                    </div>
+                    <a href="#"><h4 class="sec_h4">Suite de Luna de Miel</h4></a>
+                    <h5>S/. 1950<small>/noche</small></h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="image/room4.jpg" alt="">
+                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>
+                    </div>
+                    <a href="#"><h4 class="sec_h4">Doble Económica</h4></a>
+                    <h5>S/. 520<small>/noche</small></h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="image/room4.jpg" alt="">
+                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>
+                    </div>
+                    <a href="#"><h4 class="sec_h4">Doble Económica</h4></a>
+                    <h5>S/. 520<small>/noche</small></h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="image/room4.jpg" alt="">
+                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>
+                    </div>
+                    <a href="#"><h4 class="sec_h4">Doble Económica</h4></a>
+                    <h5>S/. 520<small>/noche</small></h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="image/room4.jpg" alt="">
+                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>
+                    </div>
+                    <a href="#"><h4 class="sec_h4">Doble Económica</h4></a>
+                    <h5>S/. 520<small>/noche</small></h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="accomodation_item text-center">
+                    <div class="hotel_img">
+                        <img src="image/room4.jpg" alt="">
+                        <a href="#" class="btn theme_btn button_hover">Reservar ahora</a>
+                    </div>
+                    <a href="#"><h4 class="sec_h4">Doble Económica</h4></a>
+                    <h5>S/. 520<small>/noche</small></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================ Área de Alojamiento =================-->
+
+
+
+<!-- Incluir el pie de página -->
+<div th:replace="~{footer :: footer}"></div>
+
+
+
+</body>
+<!-- jQuery, Popper.js, Bootstrap JS -->
+<script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/vendors/owl-carousel/owl.carousel.min.js}"></script>
+<script th:src="@{/js/jquery.ajaxchimp.min.js}"></script>
+<script th:src="@{/js/mail-script.js}"></script>
+<script th:src="@{/vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/vendors/nice-select/js/jquery.nice-select.js}"></script>
+<script th:src="@{/js/stellar.js}"></script>
+<script th:src="@{/vendors/lightbox/simpleLightbox.min.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+<script th:src="@{/js/scriptChatBot.js}"></script>
+</html>

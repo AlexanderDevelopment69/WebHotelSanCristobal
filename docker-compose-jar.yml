@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  tu-aplicacion:
+    image: tomcat:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target/tu-aplicacion.jar:/usr/local/tomcat/webapps/tu-aplicacion.jar
+    command: ["catalina.sh", "run"]
