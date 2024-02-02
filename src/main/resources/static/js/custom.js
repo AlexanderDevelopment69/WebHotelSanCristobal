@@ -60,7 +60,7 @@
     
     
     $('select').niceSelect();
-    $('#datetimepicker11,#datetimepicker1').datetimepicker({
+    $('#datetimepicker11,#datetimepicker1,#datepickerLlegada,#datepickerSalida').datetimepicker({
         daysOfWeekDisabled: [0, 6]
     });
     

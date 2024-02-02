@@ -10,6 +10,21 @@
 body {
   background: #E3F2FD;
 }
+
+.buttons-container {
+  display: flex;
+  flex-direction: column; /* Mostrar los botones en una columna */
+  align-items: center; /* Alinear los botones al centro verticalmente */
+  gap: 10px; /* Espacio entre los botones */
+}
+
+.buttons-container button {
+  width: 100%; /* Ajustar el ancho de los botones al 100% del contenedor */
+}
+
+
+
+
 .chatbot-toggler {
   position: fixed;
   bottom: 30px;
@@ -41,7 +56,6 @@ body.show-chatbot .chatbot-toggler span:last-child {
   opacity: 1;
 }
 .chatbot {
-  z-index: 1;
   position: fixed;
   right: 35px;
   bottom: 90px;
@@ -56,6 +70,7 @@ body.show-chatbot .chatbot-toggler span:last-child {
   box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
               0 32px 64px -48px rgba(0,0,0,0.5);
   transition: all 0.1s ease;
+  z-index: 9999;
 }
 body.show-chatbot .chatbot {
   opacity: 1;

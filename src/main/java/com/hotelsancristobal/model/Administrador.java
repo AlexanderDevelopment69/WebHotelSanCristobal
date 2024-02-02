@@ -4,11 +4,14 @@ package com.hotelsancristobal.model;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "administradores")
 public class Administrador {
@@ -24,10 +27,10 @@ public class Administrador {
     @Column(name = "apellidos")
     private String apellidos;
 
-    @Column(name = "dni")
+    @Column(name = "dni", unique = true, nullable = false)
     private String dni;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "password")

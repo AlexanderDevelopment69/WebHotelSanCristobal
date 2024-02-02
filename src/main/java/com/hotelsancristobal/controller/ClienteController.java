@@ -30,10 +30,18 @@ public class ClienteController {
     }
 
     @PostMapping("/registro")
-    public String registrarCliente(@ModelAttribute Cliente cliente) {
-        clienteService.registrarCliente(cliente);
+    public String registrarCliente(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
+        try {
+            clienteService.registrarCliente(cliente);
+            redirectAttributes.addFlashAttribute("successMessage", "Registro exitoso, puedes iniciar sesión");
+
+        }catch (Exception e) {
+            // Manejo de errores: puedes personalizar esto según tus necesidades
+            redirectAttributes.addFlashAttribute("errorMessage", "Ya existe este usuario registrado con este dni o correo electronico");
+        }
+
         // Redirige al formulario de inicio de sesión después del registro
-        return "redirect:/clientes/login";
+        return "redirect:/clientes/registro";
     }
 
 
@@ -77,10 +85,10 @@ public class ClienteController {
 
 
     @GetMapping("/login")
-    public String login(Model model, Cliente cliente) {
-        model.addAttribute("cliente", cliente);
+    public String mostrarlogin() {
         return "clientes/login";
     }
+
 
 
     @GetMapping("/lista")
@@ -89,6 +97,9 @@ public class ClienteController {
         model.addAttribute("clientes", clientes);
         return "clientes/listaClientes";
     }
+
+
+
 
 
     @GetMapping("/perfil")

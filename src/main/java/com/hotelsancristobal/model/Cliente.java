@@ -34,4 +34,7 @@ public class Cliente {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+
+
 }

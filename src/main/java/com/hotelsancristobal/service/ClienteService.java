@@ -1,10 +1,8 @@
 package com.hotelsancristobal.service;
 
-import com.hotelsancristobal.dto.ClienteDTO;
 import com.hotelsancristobal.model.Cliente;
 import com.hotelsancristobal.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +18,7 @@ public class ClienteService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-//    public Cliente registrarCliente(Cliente cliente) {
-//        // Cifra la contraseña antes de guardarla
-//        String passwordHash = BCrypt.hashpw(cliente.getPassword(), BCrypt.gensalt());
-//        cliente.setPassword(passwordHash);
-//
-//
-//
-//        // Lógica para validar y guardar el cliente
-//        return clienteRepository.save(cliente);
-//    }
+
 
 
     public Cliente registrarCliente(Cliente cliente) {
@@ -110,50 +99,6 @@ public class ClienteService {
     public void eliminarCliente(Long id) {
         clienteRepository.deleteById(id);
     }
-
-//    public Cliente obtenerClientePorEmail(String email) {
-//        return clienteRepository.findByEmail(email);
-//    }
-//
-//    public boolean autenticarCliente(String email, String password) {
-//        Cliente cliente = clienteRepository.findByEmail(email);
-//        // Verificar que el cliente existe y comparar la contraseña con BCrypt
-//        return cliente != null && BCrypt.checkpw(password, cliente.getPassword());
-//    }
-
-
-//    @Override
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        UserDetailsCustom userDetailsCustom = getUserDetailsCustom(email);
-//
-//        if(ObjectUtils.isEmpty(userDetailsCustom)){
-//            throw new UsernameNotFoundException("Usuario no encontrado con email: " + email);
-//        }
-//        return userDetailsCustom;
-//    }
-//
-//    private UserDetailsCustom getUserDetailsCustom(String email){
-//        Cliente cliente = clienteRepository.findByEmail(email);
-//
-//        if(ObjectUtils.isEmpty(cliente)){
-//            throw new RuntimeException();
-//        }
-//
-//        return new UserDetailsCustom(
-//                cliente.getEmail(),
-//                cliente.getPassword()
-//        );
-//    }
-
-
-//    public Cliente autenticarCliente(String email, String password) {
-//        Cliente cliente = clienteRepository.findByEmail(email);
-//        if (cliente != null && BCrypt.checkpw(password, cliente.getPassword())) {
-//            cliente.setAutenticado(true);
-//            return clienteRepository.save(cliente);
-//        }
-//        return null;
-//    }
 
 
 }

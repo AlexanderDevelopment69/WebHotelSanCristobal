@@ -1,0 +1,13 @@
+
+
+version: '3'
+services:
+  rasa:
+    container_name: rasa_server
+    image: python:3.7
+    ports:
+      - "5005:5005"
+    volumes:
+      - /home/admin/models:/app/models
+    command: ["sh", "-c", "pip install rasa==2.8.17 mysql-connector-python && rasa run actions && rasa run -m models --enable-api"]
+    restart: always

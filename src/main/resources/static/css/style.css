@@ -823,7 +823,7 @@ button:focus {
 /*=========== Start facilities_area css =============*/
 .facilities_area {
   position: relative;
-  z-index: 1;
+  z-index: 0;
   background: #04091e;
   overflow: hidden;
 }

@@ -3,8 +3,10 @@ package com.hotelsancristobal.service;
 import com.hotelsancristobal.model.Cliente;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 @Data
@@ -17,6 +19,7 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails(Cliente cliente) {
         this.cliente=cliente;
+        this.authorities = Arrays.asList(new SimpleGrantedAuthority("CLIENT"));
     }
 
 //    public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities,

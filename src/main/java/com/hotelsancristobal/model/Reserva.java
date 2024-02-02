@@ -1,10 +1,10 @@
 package com.hotelsancristobal.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
-import jakarta.persistence.*;
+import java.util.Date;
 
-import java.sql.Date;
 
 @Entity
 @Data
@@ -24,12 +24,23 @@ public class Reserva {
     @JoinColumn(name = "id_habitacion")
     private Habitacion habitacion;
 
-    @Column(name = "estado_reserva")
-    private String estadoReserva;
+    @Column(name = "estado_reserva", length = 20)
+    @Enumerated(EnumType.STRING)
+    private EstadoReserva estadoReserva = EstadoReserva.PENDIENTE;
 
     @Column(name = "fecha_inicio")
     private Date fechaInicio;
 
     @Column(name = "fecha_fin")
     private Date fechaFin;
+
+//    @Temporal(TemporalType.DATE)
+//    @DateTimeFormat(pattern = "dd-MM-yyyy")
+//    @Column(name = "fecha_inicio")
+//    private Date fechaInicio;
+//
+//    @Temporal(TemporalType.DATE)
+//    @DateTimeFormat(pattern = "dd-MM-yyyy")
+//    @Column(name = "fecha_fin")
+//    private Date fechaFin;
 }

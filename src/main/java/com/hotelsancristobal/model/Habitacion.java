@@ -1,12 +1,10 @@
 package com.hotelsancristobal.model;
 
-import lombok.Data;
 import jakarta.persistence.*;
+import lombok.Data;
 
-import java.math.BigDecimal;
-
-@Data
 @Entity
+@Data
 @Table(name = "habitaciones")
 public class Habitacion {
 
@@ -15,16 +13,16 @@ public class Habitacion {
     @Column(name = "id_habitacion")
     private Long idHabitacion;
 
-    @Column(name = "capacidad")
-    private int capacidad;
+    @Column(name = "numero_habitacion", nullable = false)
+    private int numeroHabitacion;
 
-    @Column(name = "precio")
-    private BigDecimal precio;
-
-    @Column(name = "disponible")
-    private boolean disponible;
+    @Column(name = "estado", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    private EstadoHabitacion estado = EstadoHabitacion.DISPONIBLE;
 
     @ManyToOne
-    @JoinColumn(name = "id_tipo_habitacion", nullable = false)
+    @JoinColumn(name = "id_tipo_habitacion")
     private TipoHabitacion tipoHabitacion;
+
+    // Otros métodos o lógica de negocio si es necesario
 }

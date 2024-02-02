@@ -22,8 +22,14 @@ public class HabitacionService {
         return habitacionRepository.findAll();
     }
 
-    public Optional<Habitacion> obtenerHabitacionPorId(Long id) {
-        return habitacionRepository.findById(id);
+    public List<Habitacion> obtenerHabitacionesPorTipo(Long tipoId) {
+        return habitacionRepository.findByTipoHabitacionIdTipoHabitacion(tipoId);
+    }
+
+
+    public Habitacion obtenerHabitacionPorId(Long habitacionId) {
+        // Implementa la lógica para obtener la habitación por su ID utilizando el repositorio
+        return habitacionRepository.findById(habitacionId).orElse(null);
     }
 
     public Habitacion actualizarHabitacion(Long id, Habitacion nuevaHabitacion) {
