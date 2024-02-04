@@ -225,7 +225,7 @@ const createChatLi = (message, className) => {
 
 
 const generateResponse = (userMessage) => {
-    const API_URL = "http://localhost:80/chat/send-message";
+    const API_URL = "http://localhost:5005/webhooks/rest/webhook";
     const requestOptions = {
         method: "POST",
         headers: {

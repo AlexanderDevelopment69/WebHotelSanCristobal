@@ -42,8 +42,34 @@ public class ChatbotInteraccion {
     private String respuestaChatbot;
 
 
-    @Column(name = "fecha_interaccion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date fechaInteraccion;
+    @Column(name = "fecha_interaccion_usuario", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date fechaInteraccionUsuario;
+
+
+//    @Column(name = "fecha_interaccion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+//    private Date fechaInteraccion;
+
+
+
+    @Column(name = "tiempo_usuario_envia")
+    private Date tiempoUsuarioEnvia; // Tipo Date para DATETIME
+
+    @Column(name = "tiempo_chatbot_responde")
+    private Date tiempoChatbotResponde; // Tipo Date para DATETIME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //    @Temporal(TemporalType.TIMESTAMP)
 //    @DateTimeFormat(pattern = "dd-MM-yyyy")

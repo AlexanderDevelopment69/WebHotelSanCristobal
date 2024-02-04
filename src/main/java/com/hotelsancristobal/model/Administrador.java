@@ -35,4 +35,5 @@ public class Administrador {
 
     @Column(name = "password")
     private String password;
+
 }

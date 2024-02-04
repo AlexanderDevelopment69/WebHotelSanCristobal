@@ -24,6 +24,6 @@ public class TipoHabitacionEvento {
     @JoinColumn(name = "id_evento", nullable = false)
     private Evento evento;
 
-    @Column(name = "costo_temporada", nullable = false)
-    private BigDecimal costoTemporada;
+    @Column(name = " costo_tipo_habitacion_evento", nullable = false)
+    private BigDecimal costoTipoHabitacionEvento;
 }

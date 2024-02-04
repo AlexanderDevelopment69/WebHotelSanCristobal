@@ -14,7 +14,9 @@ public class HeaderController {
 
 
     @GetMapping("/index")
-    public String mostrarInicio() {
+    public String mostrarInicio(Model model) {
+        // Obtener la lista de tipos de habitaciones desde el servicio
+        model.addAttribute("tiposHabitaciones", tipoHabitacionService.getAllTiposHabitacion());
         return "index";  // Vista correspondiente a "Inicio" (página principal)
     }
 

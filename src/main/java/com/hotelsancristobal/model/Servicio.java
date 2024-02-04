@@ -16,6 +16,10 @@ public class Servicio {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
+    @Lob
+    @Column(name = "descripcion", columnDefinition = "TEXT")
+    private String descripcion;
+
     @ManyToOne
     @JoinColumn(name = "id_tipo_habitacion")
     private TipoHabitacion tipoHabitacion;
