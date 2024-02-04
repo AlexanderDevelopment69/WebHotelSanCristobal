@@ -42,8 +42,8 @@ public class ChatbotInteraccion {
     private String respuestaChatbot;
 
 
-    @Column(name = "fecha_interaccion_usuario", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date fechaInteraccionUsuario;
+//    @Column(name = "fecha_interaccion_usuario", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+//    private Date fechaInteraccionUsuario;
 
 
 //    @Column(name = "fecha_interaccion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
