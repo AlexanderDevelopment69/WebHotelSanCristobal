@@ -18,6 +18,7 @@ public class ChatController {
     @PostMapping("/send-message")
     public String sendMessage(@RequestBody String message) {
         // Enviar solicitud al servidor RASA y obtener la respuesta
+        // Servidor Rasa
         String rasaUrl = "http://161.132.40.103:5005/webhooks/rest/webhook";
         String response = restTemplate.postForObject(rasaUrl, message, String.class);
 
