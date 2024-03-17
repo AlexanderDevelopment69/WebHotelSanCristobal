@@ -1,14 +1,30 @@
+version: '3.7'
 
-
-version: '3'
 services:
   rasa:
-    container_name: rasa_server
-    image: python:3.7
+    build:
+      context: .
+      dockerfile: Dockerfile_rasa
+    container_name: my_rasa_server
     ports:
       - "5005:5005"
     volumes:
-      - /home/admin/models:/app/models
-    working_dir: /app
-    command: ["sh", "-c", "pip install rasa==2.8.17 mysql-connector-python && rasa run actions && rasa run -m models --enable-api"]
-    restart: always
+      - ./models:/app/models
+    networks:
+      - rasa_network
+
+  action_server:
+    build:
+      context: .
+      dockerfile: Dockerfile_actions
+    container_name: my_rasa_actions
+    ports:
+      - "5055:5055"
+    volumes:
+      - /home/alexander/actions:/app/actions
+    networks:
+      - rasa_network
+
+networks:
+  rasa_network:
+    driver: bridge

@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
@@ -33,7 +36,7 @@ public class SecurityConfig1 {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/css/**", "/fonts/**", "/image/**", "/js/**", "/royal-Doc/**", "/scss/**", "/sounds/**","/vendors/**", "/assetsAdmin/**").permitAll()
-                .requestMatchers("/index", "/habitaciones", "/nosotros", "/contacto", "/clientes/login", "/clientes/registro","/chat/send-message").permitAll()
+                .requestMatchers("/index", "/habitaciones", "/nosotros", "/contacto", "/clientes/login", "/clientes/registro","/chat/send-message","/reserva/reserva_form/**","/reserva/verificar-disponibilidad/**" ).permitAll()
                 .requestMatchers("/administrador/login", "/administrador/registro","/administrador/index").permitAll()
                 .anyRequest().authenticated()
 
@@ -42,7 +45,9 @@ public class SecurityConfig1 {
                 .formLogin()
                     .usernameParameter("email")
                     .loginPage("/clientes/login")
-                    .successHandler((request, response, authentication) -> response.sendRedirect("/index"))
+                    .defaultSuccessUrl("/index", true)
+//                     .successHandler((request, response, authentication) -> response.sendRedirect("/index"))
+//                     .successHandler(savedRequestAwareAuthenticationSuccessHandler())
                     .permitAll()
                 .and()
                 .logout()
@@ -55,35 +60,43 @@ public class SecurityConfig1 {
     }
 
 
-    @SuppressWarnings("removal")
+//    @SuppressWarnings("removal")
+//    @Bean
+//    @Order(2)
+//    public SecurityFilterChain filterChain2(HttpSecurity httpSecurity) throws Exception {
+//
+//        httpSecurity
+//                .csrf().disable()
+//                .authorizeHttpRequests()
+//                .requestMatchers("/assetsAdmin/**").permitAll()
+//                .requestMatchers("/administrador/login", "/administrador/registro").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .usernameParameter("email")  // Cambia a tu parámetro de nombre de usuario para administradores
+//                .loginPage("/administrador/login")
+//                .successHandler((request, response, authentication) -> {
+//                    response.sendRedirect("/administrador/index");  // Cambia a la página de administrador
+//                })
+//                .permitAll()
+//                .and()
+//                .logout()
+//                .invalidateHttpSession(true)
+//                .clearAuthentication(true)
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//                .logoutSuccessUrl("/administrador/index").permitAll() // Redirige a la página de inicio después de cerrar sesión
+//                .permitAll();
+//
+//        return httpSecurity.build();
+//
+//    }
+
+
     @Bean
-    @Order(2)
-    public SecurityFilterChain filterChain2(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/assetsAdmin/**").permitAll()
-                .requestMatchers("/administrador/login", "/administrador/registro").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .usernameParameter("email")  // Cambia a tu parámetro de nombre de usuario para administradores
-                .loginPage("/administrador/login")
-                .successHandler((request, response, authentication) -> {
-                    response.sendRedirect("/administrador/index");  // Cambia a la página de administrador
-                })
-                .permitAll()
-                .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/administrador/index").permitAll() // Redirige a la página de inicio después de cerrar sesión
-                .permitAll();
-
-        return httpSecurity.build();
-
+    public static AuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler() {
+        SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
+        successHandler.setDefaultTargetUrl("/index"); // Página a la que se redirigirá después del inicio de sesión
+        return successHandler;
     }
 
 

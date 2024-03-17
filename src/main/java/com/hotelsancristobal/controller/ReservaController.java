@@ -8,6 +8,7 @@ import com.hotelsancristobal.service.TipoHabitacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -60,28 +63,45 @@ public class ReservaController {
     }
 
 
+
+
     @GetMapping("/verificar-disponibilidad")
-    public String verificarDisponibilidad(
-            @RequestParam("habitacion") Long habitacion,
-            @RequestParam("llegada") String llegada,
-            @RequestParam("salida") String salida,
-            Model model) {
+    @ResponseBody
+    public boolean verificarDisponibilidad(@RequestParam("numeroHabitacion") long numeroHabitacion,
+                                          @RequestParam("fechaInicio") String fechaInicio,
+                                          @RequestParam("fechaFin") String fechaFin) throws ParseException {
 
-        // Aquí implementa tu lógica para verificar la disponibilidad
-        // Puedes acceder a tu servicio (reservaService) y realizar las comprobaciones necesarias
-        boolean disponible = reservaService.verificarDisponibilidad(habitacion, llegada, salida);
+        // Fechas de inicio y fin
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date fechaI = sdf.parse(fechaInicio);
+        Date fechaF = sdf.parse(fechaFin);
 
-        // Agregar mensajes al modelo para mostrar en la página
-        if (disponible) {
-            model.addAttribute("successMessage", "Habitación disponible");
-        } else {
-            model.addAttribute("errorMessage", "Habitación no disponible");
-        }
 
-        // Devolver la vista donde se mostrarán los mensajes
-        return "clientes/reserva_form"; // Reemplaza "nombre_de_tu_vista" con el nombre de tu vista Thymeleaf
+
+
+//        if (disponible) {
+//            model.addAttribute("successMessage", "Habitación disponible");
+//            model.addAttribute("errorMessage", null); // Limpiar el mensaje de error si está disponible
+//        } else {
+//            model.addAttribute("errorMessage", "Habitación no disponible");
+//            model.addAttribute("successMessage", null); // Limpiar el mensaje de éxito si no está disponible
+//        }
+//
+//        return "clientes/reserva_form"; // Redirigir a la misma vista clientes/reserva_form
+
+        // Construir mensaje de respuesta
+//        String mensaje;
+//        if (disponible) {
+//            mensaje = "Habitación disponible";
+//        } else {
+//            mensaje = "Habitación no disponible";
+//        }
+//
+//        return mensaje;
+
+        return reservaService.verificarDisponibilidad(numeroHabitacion, fechaI, fechaF);
+
     }
-
 
 
 
@@ -116,14 +136,42 @@ public class ReservaController {
         return "clientes/reserva_form";  // Ajusta la ruta según tu estructura
     }
 
-    @PostMapping("/realizarReserva")
-    public String realizarReserva(@RequestParam Long habitacionId,
-                                  @RequestParam String fechaInicio,
-                                  @RequestParam String fechaFin,
-                                  Model model) {
 
-        // Obtener información del usuario autenticado
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+    @PostMapping("/realizarReserva")
+    @ResponseBody
+    @PreAuthorize("isAuthenticated()")
+    public boolean realizarReserva(Authentication authentication, @RequestParam Long habitacionId,
+                                   @RequestParam String fechaInicio,
+                                   @RequestParam String fechaFin) throws ParseException {
+
+        // Fechas de inicio y fin
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date fechaI = sdf.parse(fechaInicio);
+        Date fechaF = sdf.parse(fechaFin);
+
+
+
+         // Obtener información del usuario autenticado
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+//         Verificar si el cliente ha iniciado sesión
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            // El cliente no ha iniciado sesión, manejar la situación según sea necesario
+            return false; // Por ejemplo, podrías redirigir a la página de inicio de sesión
+        }
+
+        // Verificar si los datos no son nulos
+//        if (habitacionId == null || fechaInicio == null || fechaFin == null) {
+//            // Datos incompletos, no se puede realizar la reserva
+//            return false;
+//        }
+
+
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String nombreUsuario = userDetails.getUsername();
 
@@ -131,33 +179,39 @@ public class ReservaController {
         Cliente cliente = clienteService.obtenerClientePorEmail(nombreUsuario);
 
         // Validar disponibilidad y realizar reserva
-        boolean disponibilidad = reservaService.verificarDisponibilidad(habitacionId, fechaInicio, fechaFin);
+        boolean disponibilidad = reservaService.verificarDisponibilidad(habitacionId, fechaI, fechaF);
 
         if (disponibilidad) {
-            // Crear la instancia de la entidad Reserva
-            Reserva reserva = new Reserva();
-
-            // Configurar los campos de la reserva
-            // Puedes obtener más detalles de la habitación a través de un servicio
-            // Supongo que habitacionService tiene un método similar a obtenerHabitacionPorId
-            Habitacion habitacion = habitacionService.obtenerHabitacionPorId(habitacionId);
-
-            reserva.setCliente(cliente);
-            reserva.setHabitacion(habitacion);
-            reserva.setEstadoReserva(EstadoReserva.PENDIENTE);  // Estado predeterminado
-            reserva.setFechaInicio(Date.valueOf(fechaInicio));
-            reserva.setFechaFin(Date.valueOf(fechaFin));
-
-            // Guardar la reserva en la base de datos
-            // Llama al servicio para realizar la reserva
-            reservaService.realizarReserva(habitacionId, cliente.getId(), Date.valueOf(fechaInicio), Date.valueOf(fechaFin));
-
-            return "redirect:/reserva/confirmacion";  // Redirigir a la página de confirmación
+            // Realizar reserva y devolver el resultado
+            return reservaService.realizarReserva(habitacionId, cliente.getId(), fechaI, fechaF);
         } else {
-            // Habitación no disponible, redirigir a una página de error o mostrar un mensaje al usuario
-            return "redirect:/reserva/error";  // Redirigir a la página de error
+            return false; // Si la habitación no está disponible, retornar false
         }
+
     }
+
+
+//    @GetMapping("/reservas")
+//    public String mostrarReservasCliente(Authentication authentication, Model model) {
+//        // Obtener la autenticación actual
+////        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//
+//        // Obtener el correo electrónico del usuario autenticado
+//        String email = userDetails.getUsername();
+//
+//        // Lógica para obtener detalles del perfil del cliente
+//        Cliente cliente = clienteService.obtenerClientePorEmail(email);
+//
+//        List<Reserva> reservas = reservaService.obtenerReservasPorIdCliente(cliente.getId());
+//        System.out.println(reservas); // Imprimir las reservas en la consola
+//        model.addAttribute("reservas", reservas);
+//        return "clientes/reservas"; // Nombre de la página HTML o plantilla Thymeleaf para mostrar las reservas
+//    }
+
+
+
 
 
 }

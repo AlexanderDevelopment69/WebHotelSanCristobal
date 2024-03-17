@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  nginx-proxy:
+    build:
+      context: .
+      dockerfile: dockerfile_nginx
+    ports:
+      - "8443:443"
+    volumes:
+      - ./certificado.p12:/app/certificado.p12
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    working_dir: /app

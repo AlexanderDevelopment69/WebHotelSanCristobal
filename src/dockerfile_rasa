@@ -1,0 +1,21 @@
+
+# Usa una imagen base de Python 3.7
+FROM python:3.7
+
+# Establece el directorio de trabajo en /app
+WORKDIR /app
+
+# Copia el directorio de tu aplicación al contenedor
+#COPY . /app
+COPY endpoints.yml /app/endpoints.yml
+COPY models /app/models
+
+# Instala las dependencias
+RUN pip install --no-cache-dir --upgrade pip rasa==2.8.17 mysql-connector-python
+
+# Expone el puerto 5005
+EXPOSE 5005
+
+# Comando predeterminado para ejecutar el servidor Rasa
+CMD ["rasa", "run", "--model", "models", "--enable-api", "--cors", "*", "--debug"]
+

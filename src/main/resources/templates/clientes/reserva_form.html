@@ -22,6 +22,9 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0"/>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
     <!-- main css -->
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <link rel="stylesheet" th:href="@{/css/responsive.css}"/>
@@ -37,7 +40,7 @@
         <div class="page-cover text-center">
             <h2 class="page-cover-tittle">Reserva de habitación</h2>
             <ol class="breadcrumb">
-                <li><a href="index.html">Inicio</a></li>
+                <li><a th:href="@{/index}">Inicio</a></li>
                 <li class="active">Reserva</li>
             </ol>
         </div>
@@ -134,8 +137,17 @@
             <div class="row">
                 <div class="col-lg-8 col-md-8">
                     <h3 class="mb-30 title_color">Formulario de Reserva</h3>
+                    <!-- Mensajes de éxito o error -->
+                    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                        <strong th:text="${successMessage}"></strong>
+                    </div>
+                    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                        <strong th:text="${errorMessage}"></strong>
+                    </div>
 
-                    <form th:action="@{/reserva/verificar-disponibilidad}" method="get">
+                    <!--                    <form th:action="@{/reserva/verificar-disponibilidad}" method="get">-->
+                    <form id="verificarForm">
+
 
                         <!-- Subtítulo Introductorio -->
                         <p class="mb-30">Por favor, selecciona la habitación y las fechas deseadas para tu
@@ -145,7 +157,8 @@
                         <div class="single-element-widget">
                             <h4 class="mb-30 title_color">Selecciona una Habitación</h4>
                             <div class="default-select" id="default-select">
-                                <select name="habitacion" required>
+                                <select id="numeroHabitacion" name="numeroHabitacion" required
+                                        onchange="capturarYActualizarNumeroHabitacion()">
                                     <option value="" disabled selected>Selecciona una habitación</option>
                                     <option th:each="habitacion : ${habitaciones}"
                                             th:value="${habitacion.numeroHabitacion}"
@@ -157,33 +170,21 @@
                         <!-- Fechas de Llegada y Salida -->
                         <div class="single-element-widget">
                             <h4 class="mb-30 title_color">Fechas de Reserva</h4>
-                            <div class="input-group date mb-3" id="datepickerLlegada">
-                                <input type="text" class="form-control" name="llegada" placeholder="Fecha de Llegada"
-                                       required>
-                                <span class="input-group-addon">
-                                 <i class="fa fa-calendar" aria-hidden="true"></i>
-                            </span>
+                            <div class="date mb-3">
+                                <label for="fechaInicio">Fecha de Llegada:</label>
+                                <input id="fechaInicio" type="datetime-local" class="form-control" name="fechaInicio" style="width: 50%" placeholder="Fecha de Llegada" required>
                             </div>
-                            <div class="input-group date mb-3 " id="datepickerSalida">
-                                <input type="text" class="form-control" name="salida" placeholder="Fecha de Salida"
-                                       required>
-                                <span class="input-group-addon">
-            <i class="fa fa-calendar" aria-hidden="true"></i>
-        </span>
+                            <div class="date mb-3 ">
+                                <label for="fechaFin">Fecha de Salida:</label>
+                                <input id="fechaFin" type="datetime-local" class="form-control" name="fechaFin"  style="width: 50%" placeholder="Fecha de Salida" required>
                             </div>
                         </div>
 
                         <!-- Botón de envío -->
                         <button type="submit" class="btn btn-primary">Verificar disponibilidad</button>
+                        <div id="mensajeRespuesta" class="mt-3"></div>
                     </form>
 
-                    <!-- Mensajes de éxito o error -->
-                    <div th:if="${successMessage}" class="alert alert-success" role="alert">
-                        <strong th:text="${successMessage}"></strong>
-                    </div>
-                    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-                        <strong th:text="${errorMessage}"></strong>
-                    </div>
 
                 </div>
 
@@ -192,12 +193,21 @@
                         <h4 class="mb-30 title_color">Resumen de Reserva</h4>
                         <ul class="list-group" id="resumenReserva">
                             <!-- Aquí se actualizará dinámicamente la información de la reserva -->
+                            <li class="list-group-item">Número de Habitación: <span id="resumenNumeroHabitacion"></span></li>
+                            <li class="list-group-item">Fecha de Inicio: <span id="resumenFechaInicio"></span></li>
+                            <li class="list-group-item">Fecha de Fin: <span id="resumenFechaFin"></span></li>
                         </ul>
                         <!-- Botón de Reservar Ahora -->
-                        <button type="submit" class="btn btn-primary btn-block mt-3">Reservar Ahora</button>
+                        <button type="button" class="btn btn-primary btn-block mt-3" id="btnReservarAhora" >Reservar Ahora</button>
+
+<!--                        <button onclick="verificarInicioSesion()"  class="btn btn-primary btn-block mt-3">Verificar Inicio de Sesión</button>-->
+
+                        <div id="mensajeRespuestaReserva" class="mt-3"></div>
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>
@@ -205,9 +215,240 @@
 
 <!-- Incluir el pie de página -->
 <div th:replace="~{footer :: footer}"></div>
-
-
 </body>
+
+<script>
+    $(document).ready(function() {
+        $('#btnReservarAhora').click(function() {
+            verificarInicioSesion();
+
+            // realizarReserva();
+
+        });
+    });
+
+
+    function verificarInicioSesion() {
+        $.ajax({
+            type: 'GET',
+            url: '/clientes/verificarSesion',
+            success: function(response) {
+
+                if (response === true) {
+                    console.log('El usuario ha iniciado sesión.');
+                    realizarReserva()
+                }
+                else {
+                    console.log('El usuario no ha iniciado sesión.');
+                    window.location.href = '/clientes/login';
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al verificar la sesión:', error);
+            }
+        });
+    }
+
+
+    function realizarReserva() {
+
+        var habitacionId = $('#resumenNumeroHabitacion').text();
+        var fechaInicio = $('#resumenFechaInicio').text();
+        var fechaFin = $('#resumenFechaFin').text();
+
+        // Verificar si los datos están vacíos
+        if (!habitacionId || !fechaInicio || !fechaFin) {
+            var errorMessage = 'Faltan datos para realizar la reserva';
+            $('#mensajeRespuestaReserva').html('<div class="alert alert-danger" role="alert">' + errorMessage + '</div>');
+            console.error(errorMessage);
+            return; // Salir de la función si faltan datos
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/reserva/realizarReserva',
+            data: {
+                habitacionId: habitacionId,
+                fechaInicio: fechaInicio,
+                fechaFin: fechaFin
+            },
+            success: function(response) {
+                var mensajeClass = response ? 'alert alert-success' : 'alert alert-danger';
+                var mensajeTexto = response ? 'Reserva realizada con éxito.' : 'No se pudo realizar la reserva.';
+                $('#mensajeRespuestaReserva').html('<div class="' + mensajeClass + '" role="alert">' + mensajeTexto + '</div>');
+            },
+            error: function(xhr, status, error) {
+                var errorMessage = 'Error en la solicitud AJAX: ' + error;
+                $('#mensajeRespuestaReserva').html('<div class="alert alert-danger" role="alert">' + errorMessage + '</div>');
+                console.error(errorMessage);
+            }
+        });
+    }
+
+
+
+
+
+</script>
+
+
+
+
+
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $('#btnReservarAhora').click(function() {-->
+<!--            var habitacionId = $('#resumenNumeroHabitacion').text();-->
+<!--            var fechaInicio = $('#resumenFechaInicio').text();-->
+<!--            var fechaFin = $('#resumenFechaFin').text();-->
+
+<!--            // Verificar si los datos están vacíos-->
+<!--            if (!habitacionId || !fechaInicio || !fechaFin) {-->
+<!--                var errorMessage = 'Faltan datos para realizar la reserva';-->
+<!--                $('#mensajeRespuestaReserva').html('<div class="alert alert-danger" role="alert">' + errorMessage + '</div>');-->
+<!--                console.error(errorMessage);-->
+<!--                return; // Salir de la función si faltan datos-->
+<!--            }-->
+
+<!--            $.ajax({-->
+<!--                type: 'POST',-->
+<!--                url: '/reserva/realizarReserva',-->
+<!--                data: {-->
+<!--                    habitacionId: habitacionId,-->
+<!--                    fechaInicio: fechaInicio,-->
+<!--                    fechaFin: fechaFin-->
+<!--                },-->
+<!--                success: function(response) {-->
+<!--                    var mensajeClass = response ? 'alert alert-success' : 'alert alert-danger';-->
+<!--                    var mensajeTexto = response ? 'Reserva realizada con éxito.' : 'No se pudo realizar la reserva.';-->
+<!--                    $('#mensajeRespuestaReserva').html('<div class="' + mensajeClass + '" role="alert">' + mensajeTexto + '</div>');-->
+<!--                },-->
+<!--                error: function(xhr, status, error) {-->
+<!--                    var errorMessage = 'Error en la solicitud AJAX: ' + error;-->
+<!--                    $('#mensajeRespuestaReserva').html('<div class="alert alert-danger" role="alert">' + errorMessage + '</div>');-->
+<!--                    console.error(errorMessage);-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#verificarForm').submit(function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe de manera convencional
+            var formData = $(this).serialize(); // Serializa los datos del formulario
+
+            $.ajax({
+                type: 'GET',
+                url: '/reserva/verificar-disponibilidad',
+                data: formData,
+                success: function (response) {
+                    var mensajeClass = response ? 'alert alert-success' : 'alert alert-danger';
+                    var mensajeTexto = response ? 'Habitación disponible' : 'Habitación no disponible';
+                    $('#mensajeRespuesta').html('<div class="' + mensajeClass + '" role="alert">' + mensajeTexto + '</div>');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error en la solicitud AJAX:', error);
+                }
+            });
+        });
+    });
+</script>
+
+
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $('#verificarForm').submit(function(event) {-->
+<!--            event.preventDefault(); // Evita que el formulario se envíe de manera convencional-->
+
+<!--            var formData = $(this).serialize(); // Serializa los datos del formulario-->
+
+<!--            $.ajax({-->
+<!--                type: 'GET',-->
+<!--                url: '/reserva/verificar-disponibilidad',-->
+<!--                data: formData,-->
+<!--                success: function(response) {-->
+<!--                    var mensajeClass = (response === 'Habitación disponible') ? 'alert alert-success' : 'alert alert-danger';-->
+<!--                    $('#mensajeRespuesta').html('<div class="' + mensajeClass + '" role="alert">' + response + '</div>');-->
+<!--                },-->
+<!--                error: function(xhr, status, error) {-->
+<!--                    console.error('Error en la solicitud AJAX:', error);-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
+<script>
+    function verificarDisponibilidad() {
+        var numeroHabitacion = document.getElementById("numeroHabitacion").value;
+        var fechaInicio = document.getElementById("fechaInicio").value;
+        var fechaFin = document.getElementById("fechaFin").value;
+
+        // Realizar petición AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/reserva/verificar-disponibilidad?numeroHabitacion=" + numeroHabitacion + "&fechaInicio=" + fechaInicio + "&fechaFin=" + fechaFin, true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.disponible) {
+                    document.getElementById("successMessage").innerHTML = "Habitación disponible";
+                    document.getElementById("errorMessage").innerHTML = ""; // Limpiar el mensaje de error si está disponible
+                } else {
+                    document.getElementById("errorMessage").innerHTML = "Habitación no disponible";
+                    document.getElementById("successMessage").innerHTML = ""; // Limpiar el mensaje de éxito si no está disponible
+                }
+            }
+        };
+        xhr.send();
+    }
+</script>
+
+
+<script>
+    // Función para capturar y actualizar el número de habitación
+    function capturarYActualizarNumeroHabitacion() {
+        var numeroHabitacionSeleccionada = document.getElementById('numeroHabitacion').value;
+        document.getElementById('resumenNumeroHabitacion').textContent = numeroHabitacionSeleccionada;
+    }
+
+    // Función para capturar y actualizar la fecha de inicio
+    function capturarYActualizarFechaInicio() {
+        var fechaInicio = new Date(document.getElementById('fechaInicio').value);
+        var fechaFormateada = formatDate(fechaInicio);
+        document.getElementById('resumenFechaInicio').textContent = fechaFormateada;
+    }
+
+    // Función para capturar y actualizar la fecha de fin
+    function capturarYActualizarFechaFin() {
+        var fechaFin = new Date(document.getElementById('fechaFin').value);
+        var fechaFormateada = formatDate(fechaFin);
+        document.getElementById('resumenFechaFin').textContent = fechaFormateada;
+    }
+
+    // Función para formatear la fecha en formato 'AAAA-MM-DD HH:MM'
+    function formatDate(date) {
+        var year = date.getFullYear();
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        var hour = ('0' + date.getHours()).slice(-2);
+        var minute = ('0' + date.getMinutes()).slice(-2);
+        return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+    }
+
+    // Agregar event listeners para detectar cambios en la selección de habitación y en las fechas
+    document.getElementById('numeroHabitacion').addEventListener('input', capturarYActualizarNumeroHabitacion);
+    document.getElementById('fechaInicio').addEventListener('input', capturarYActualizarFechaInicio);
+    document.getElementById('fechaFin').addEventListener('input', capturarYActualizarFechaFin);
+</script>
+
+
 
 
 <!-- jQuery, Popper.js, Bootstrap JS -->
@@ -223,43 +464,6 @@
 <script th:src="@{/vendors/lightbox/simpleLightbox.min.js}"></script>
 <script th:src="@{/js/custom.js}"></script>
 <script th:src="@{/js/scriptChatBot.js}"></script>
-
-<!--<script>-->
-<!--    // Función para actualizar el resumen de la reserva-->
-<!--    function actualizarResumen() {-->
-<!--        // Obtener el valor seleccionado de la habitación-->
-<!--        var habitacionSeleccionada = document.getElementById("habitacionSeleccionada").value;-->
-
-<!--        // Obtener las fechas de llegada y salida-->
-<!--        var fechaLlegada = document.getElementById("fechaLlegada").value;-->
-<!--        var fechaSalida = document.getElementById("fechaSalida").value;-->
-
-<!--        // Actualizar el contenido del resumen-->
-<!--        var resumenElement = document.getElementById("resumenReserva");-->
-<!--        resumenElement.innerHTML = `-->
-<!--                <li class="list-group-item d-flex justify-content-between align-items-center">-->
-<!--                    Habitación Seleccionada:-->
-<!--                    <span class="badge badge-primary badge-pill">${habitacionSeleccionada}</span>-->
-<!--                </li>-->
-<!--                <li class="list-group-item d-flex justify-content-between align-items-center">-->
-<!--                    Fecha de Llegada:-->
-<!--                    <span class="badge badge-primary badge-pill">${fechaLlegada}</span>-->
-<!--                </li>-->
-<!--                <li class="list-group-item d-flex justify-content-between align-items-center">-->
-<!--                    Fecha de Salida:-->
-<!--                    <span class="badge badge-primary badge-pill">${fechaSalida}</span>-->
-<!--                </li>-->
-<!--                &lt;!&ndash; Puedes añadir más detalles según sea necesario &ndash;&gt;-->
-<!--            `;-->
-<!--    }-->
-
-<!--    // Agregar un evento de cambio a la habitación para actualizar el resumen-->
-<!--    document.getElementById("habitacionSeleccionada").addEventListener("change", actualizarResumen);-->
-
-<!--    // Agregar un evento de cambio a las fechas para actualizar el resumen-->
-<!--    document.getElementById("fechaLlegada").addEventListener("change", actualizarResumen);-->
-<!--    document.getElementById("fechaSalida").addEventListener("change", actualizarResumen);-->
-<!--</script>-->
-
+<script th:src="@{/js/usuario.js}"></script>
 
 </html>

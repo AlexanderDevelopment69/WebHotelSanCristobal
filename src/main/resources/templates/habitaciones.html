@@ -189,7 +189,7 @@
                             <a th:href="@{/reserva/reserva_form(tipoId=${tipoHabitacion.idTipoHabitacion})}" class="btn theme_btn button_hover">Reservar Ahora</a>
                         </div>
                         <a href="#"><h4 class="sec_h4" th:text="${tipoHabitacion.nombreTipo}"></h4></a>
-                        <h5 th:text="'S/. '+ ${tipoHabitacion.costo} + '/noche'"></h5>
+                        <h5 th:text="'S/. '+ ${tipoHabitacion.precio} + '/noche'"></h5>
                     </div>
                 </div>
 
@@ -228,4 +228,5 @@
 <script th:src="@{/vendors/lightbox/simpleLightbox.min.js}"></script>
 <script th:src="@{/js/custom.js}"></script>
 <script th:src="@{/js/scriptChatBot.js}"></script>
+<script th:src="@{/js/usuario.js}"></script>
 </html>

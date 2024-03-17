@@ -224,14 +224,20 @@ const createChatLi = (message, className) => {
 }
 
 
+
+
 const generateResponse = (userMessage) => {
-    const API_URL = "http://localhost:5005/webhooks/rest/webhook";
+    // const API_URL = "http://localhost:5005/webhooks/rest/webhook";
+    // const API_URL = "http://161.132.40.103:5005/webhooks/rest/webhook";
+    const API_URL = "https://hotelsancristobal-ayacucho.com/chat/send-message";
+
+    const usuarioId = obtenerUsuarioId(); // Función para obtener el identificador único del usuario desde una cookie o almacenamiento local
     const requestOptions = {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({message: userMessage})
+        body: JSON.stringify({message: userMessage,  "sender" : usuarioId}) // Incluir el identificador único del usuario en la solicitud
     };
 
     fetch(API_URL, requestOptions)
@@ -282,6 +288,13 @@ chatInput.addEventListener("keydown", (e) => {
         handleChat();
     }
 });
+
+
+function obtenerUsuarioId() {
+    // Lee el identificador único del usuario desde sessionStorage
+    return sessionStorage.getItem('usuario_id');
+}
+
 
 sendChatBtn.addEventListener("click", handleChat);
 closeBtn.addEventListener("click", () => document.body.classList.remove("show-chatbot"));

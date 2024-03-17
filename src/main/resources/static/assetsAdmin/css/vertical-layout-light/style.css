@@ -1272,7 +1272,6 @@
     -moz-transform-origin: top center 50%;
     -ms-transform-origin: top center 50%;
     -o-transform-origin: top center 50%;
-    transform-origin: top center 50%;
   }
   20% {
     -webkit-transform: rotate(15deg);

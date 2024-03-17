@@ -17,6 +17,9 @@ public class ChatbotInteraccion {
     @Column(name = "id_interaccion")
     private Long idInteraccion;
 
+    @Column(name = "id_usuario")
+    private String idUsuario;
+
     @Column(name = "nombres_usuario")
     private String nombresUsuario;
 

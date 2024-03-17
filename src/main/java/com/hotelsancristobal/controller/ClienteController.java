@@ -1,16 +1,22 @@
 package com.hotelsancristobal.controller;
 
 import com.hotelsancristobal.model.Cliente;
+import com.hotelsancristobal.model.Reserva;
 import com.hotelsancristobal.service.ClienteService;
+import com.hotelsancristobal.service.ReservaService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/clientes")
@@ -18,6 +24,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private ReservaService reservaService;
 
 
     @GetMapping("/registro")
@@ -202,11 +211,11 @@ public class ClienteController {
 
 
 
-    @GetMapping("/reservas")
-    public String verReservas(Model model) {
-        // Lógica para mostrar las reservas del cliente
-        return "clientes/reservas";
-    }
+//    @GetMapping("/reservas")
+//    public String verReservas(Model model) {
+//        // Lógica para mostrar las reservas del cliente
+//        return "clientes/reservas";
+//    }
 
 
     @GetMapping("/pagos")
@@ -227,5 +236,41 @@ public class ClienteController {
         return "redirect:/index";
     }
 
+
+
+    @GetMapping("/verificarSesion")
+    @ResponseBody
+    public boolean verificarSesion() {
+        // Verificar si el usuario ha iniciado sesión
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated();
+    }
+
+
+    @GetMapping("/reservas")
+    public String mostrarReservasCliente(Authentication authentication, Model model) {
+        // Obtener la autenticación actual
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        // Obtener el correo electrónico del usuario autenticado
+        String email = authentication.getName();
+
+        // Lógica para obtener detalles del perfil del cliente
+        Cliente cliente = clienteService.obtenerClientePorEmail(email);
+
+        List<Reserva> reservas = reservaService.obtenerReservasPorIdCliente(cliente.getId());
+        System.out.println(reservas); // Imprimir las reservas en la consola
+        model.addAttribute("reservas", reservas);
+        return "clientes/reservas"; // Nombre de la página HTML o plantilla Thymeleaf para mostrar las reservas
+    }
+
+
+    @GetMapping("/reservas/{reservaId}/eliminar")
+    public String eliminarReservaCliente(@PathVariable("reservaId") Long reservaId) {
+        reservaService.eliminarReserva(reservaId);
+        return "redirect:/clientes/reservas"; // Redirecciona a la página de reservas del cliente después de eliminar
+    }
 
 }

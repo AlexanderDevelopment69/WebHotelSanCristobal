@@ -204,39 +204,3 @@ VALUES ('Semana santa', '2024-04-10', '2024-04-17', 'Vacaciones de Semana Santa'
        ('Carnavales', '2024-02-21', '2024-02-25', 'Celebración de Carnavales'),
        ('Fiestas patrias', '2024-07-28', '2024-07-29', 'Celebración de las fiestas patrias.');
 
-
-
-
-
-
--- Inserta registros en la tabla tipos_habitaciones_eventos
--- Costos para los tipos de habitaciones durante los eventos
-INSERT INTO tipos_habitaciones_eventos (id_tipo_habitacion, id_evento, costo_tipo_habitacion_evento)
-VALUES
--- Costo para habitación individual  durante el evento
-(1, 1, 100.00), -- Semana santa
-(1, 2, 100.00), -- Carnavales
-(1, 3, 100.00), -- Fiestas patrias
--- Costo para habitación doble  durante el evento
-(2, 1, 200.00), -- Semana santa
-(2, 2, 200.00), -- Carnavales
-(2, 3, 200.00), -- Fiestas patrias
--- Costo para habitación matrimonial durante el evento
-(3, 1, 200.00), -- Semana santa
-(3, 2, 200.00), -- Carnavales
-(3, 3, 200.00); -- Fiestas patrias
-
-
-
-#-------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
--- Insertar datos de prueba en la tabla de reservas (ejemplo con reservas canceladas)
-INSERT INTO reservas (id_cliente, id_habitacion, estado_reserva, fecha_inicio, fecha_fin)
-VALUES
-    (1, 1, 'PENDIENTE', '2024-01-23', '2024-01-30'),
-    (1, 2, 'PENDIENTE', '2024-01-23', '2024-01-30');
-
-

@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  rasa:
+    build:
+      context: .
+      dockerfile: dockerfile_rasa
+    container_name: my_rasa_server
+    restart: always
+    ports:
+      - "5005:5005"
+    volumes:
+      - /etc/ssl/certs/certificado.p12:/app/certificado.p12  # Montar el certificado PKCS12
+      - ./models:/app/models
+      - ./endpoints.yml:/app/endpoints.yml
+    networks:
+      - rasa_network
+networks:
+  rasa_network:
+    driver: bridge
+
+

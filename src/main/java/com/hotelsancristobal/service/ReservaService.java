@@ -7,14 +7,18 @@ import com.hotelsancristobal.model.Reserva;
 import com.hotelsancristobal.repository.ClienteRepository;
 import com.hotelsancristobal.repository.HabitacionRepository;
 import com.hotelsancristobal.repository.ReservaRepository;
+import com.hotelsancristobal.repository.TipoHabitacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ReservaService {
@@ -27,6 +31,10 @@ public class ReservaService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private TipoHabitacionRepository tipoHabitacionRepository;
+
 
     public Reserva registrarReserva(Reserva reserva) {
         // Lógica para validar y guardar la reserva
@@ -56,47 +64,62 @@ public class ReservaService {
     }
 
 
-    public boolean verificarDisponibilidad(Long idHabitacion, String fechaInicio, String fechaFin) {
-        // Lógica para verificar disponibilidad en la base de datos
-        // Implementa el método que mencioné anteriormente para verificar la disponibilidad.
-        // Retorna true si la habitación está disponible, false en caso contrario.
-        return true; // Placeholder, reemplaza con la lógica real.
+    public boolean verificarDisponibilidad(long numeroHabitacion, Date fechaInicio, Date fechaFin) {
+
+        return reservaRepository.verificarDisponibilidad(numeroHabitacion, fechaInicio, fechaFin);
     }
 
-//    public Reserva realizarReserva(Long idHabitacion, String fechaInicio, String fechaFin, String nombreCliente, String correoCliente) {
-//        Habitacion habitacion = habitacionRepository.findById(idHabitacion).orElseThrow(() -> new ChangeSetPersister.NotFoundException("Habitación no encontrada"));
+    public List<Reserva> obtenerReservasPorIdCliente(Long idCliente) {
+        return reservaRepository.findAllByClienteId(idCliente);
+    }
+
+
+//    public Reserva realizarReserva(Long habitacionId, Long clienteId, Date fechaInicio, Date fechaFin) {
+//        // Validar disponibilidad y crear la reserva
+//        Habitacion habitacion = habitacionRepository.findById(habitacionId).orElseThrow(() -> new RuntimeException("Habitación no encontrada"));
+//        Cliente cliente = clienteRepository.findById(clienteId).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 //
-//        // Crea una nueva instancia de Reserva
 //        Reserva reserva = new Reserva();
 //        reserva.setHabitacion(habitacion);
+//        reserva.setCliente(cliente);
+//        reserva.setEstadoReserva(EstadoReserva.PENDIENTE);  // Puedes tener un enum con estados
 //        reserva.setFechaInicio(fechaInicio);
 //        reserva.setFechaFin(fechaFin);
-//        reserva.setNombreCliente(nombreCliente);
-//        reserva.setCorreoCliente(correoCliente);
-//        // Establece otros campos de la reserva...
 //
-//        // Guarda la reserva en la base de datos
-//        reservaRepository.save(reserva);
-//
-//        return reserva;
+//        return reservaRepository.save(reserva);
 //    }
 
-    public Reserva realizarReserva(Long habitacionId, Long clienteId, Date fechaInicio, Date fechaFin) {
-        // Validar disponibilidad y crear la reserva
+    public boolean realizarReserva(Long habitacionId, Long clienteId, Date fechaInicio, Date fechaFin) {
+        // Verificar si la habitación existe
         Habitacion habitacion = habitacionRepository.findById(habitacionId).orElseThrow(() -> new RuntimeException("Habitación no encontrada"));
+        // Verificar si el cliente existe
         Cliente cliente = clienteRepository.findById(clienteId).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
+        // Aquí podrías realizar la lógica necesaria para crear la reserva
         Reserva reserva = new Reserva();
+
+
+        // Calcular la diferencia en días
+//        long diferenciaEnMilisegundos = fechaFin.getTime() - fechaInicio.getTime();
+//        long diasDiferencia = TimeUnit.DAYS.convert(diferenciaEnMilisegundos, TimeUnit.MILLISECONDS);
+
+
+
+        // Calcular el monto total
+
+        // Configurar los campos de la reserva
         reserva.setHabitacion(habitacion);
         reserva.setCliente(cliente);
-        reserva.setEstadoReserva(EstadoReserva.PENDIENTE);  // Puedes tener un enum con estados
         reserva.setFechaInicio(fechaInicio);
         reserva.setFechaFin(fechaFin);
+        reserva.setEstadoReserva(EstadoReserva.PENDIENTE); // Estado predeterminado
+//        reserva.setMontoReserva(montoReserva);
 
-        return reservaRepository.save(reserva);
+        // Guardar la reserva en la base de datos
+        reservaRepository.save(reserva);
+
+        // Devolver true si la reserva se realizó con éxito
+        return true;
     }
-
-
 
 
 }

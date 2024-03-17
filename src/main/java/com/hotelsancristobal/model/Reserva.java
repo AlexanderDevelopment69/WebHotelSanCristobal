@@ -3,6 +3,7 @@ package com.hotelsancristobal.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -33,6 +34,9 @@ public class Reserva {
 
     @Column(name = "fecha_fin")
     private Date fechaFin;
+
+//    @Column(name = "monto_reserva")
+//    private BigDecimal montoReserva;
 
 //    @Temporal(TemporalType.DATE)
 //    @DateTimeFormat(pattern = "dd-MM-yyyy")
